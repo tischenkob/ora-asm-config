@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+read INPUT
+
+GROUP_NAME=$1
+SHOULD_MAKE=$2
+FILE_AMOUNT=$3
+AU_SIZE=$4
+
+OUTPUT="CREATE DISKGROUP $GROUP_NAME NORMAL REDUNDANCY DISK "
+
+if [ $SHOULD_MAKE -eq 1 ]; then
+    mkdir /u01/$GROUP_NAME
+fi
+
+for ((j = 0; j < ${FILE_AMOUNT}; j++)); do
+    {
+        FILE_PATH=/u01/$GROUP_NAME/${GROUP_NAME}"$j"
+        if [ $SHOULD_MAKE -eq 1 ]; then
+            /usr/sbin/mkfile -n 70m $FILE_PATH
+        fi
+        OUTPUT="${OUTPUT}"${PREFIX}"'${FILE_PATH}'"
+        PREFIX=,
+    }
+done
+OUTPUT="$OUTPUT
+    ATTRIBUTE 'au_size'='$AU_SIZE';"
+
+echo "$INPUT $OUTPUT"

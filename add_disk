@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+read INPUT
+
+GROUP_NAME=$1
+DISK_NUM=$2
+$FILE_PATH="/u01/$GROUP_NAME/$GROUP_NAME$DISK_NUM"
+
+/usr/sbin/mkfile -n 70m $FILE_PATH
+
+OUTPUT="ALTER DISKGROUP $GROUP_NAME ADD DISK '$FILE_PATH';"
+
+echo "$INPUT $OUTPUT"

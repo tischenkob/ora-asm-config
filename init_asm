@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+ASM_POWER_LIMIT=8
+DISKGROUP_NAMES=(dangerousdolphin dangerouschimpanzee crazydog crazycheetah)
+DISKGROUP_AMOUNTS=(3 6 7 7)
+
+for ((i = 0; i < ${#DISKGROUP_NAMES[*]}; i++)); do
+    {
+        GROUP_NAME=${DISKGROUP_NAMES[$i]}
+        FILE_AMOUNT=${DISKGROUP_AMOUNTS[$i]}
+        mkdir /u01/$GROUP_NAME
+        for ((j = 0; j < ${FILE_AMOUNT}; j++)); do
+            {
+                FILE_PATH=/u01/$GROUP_NAME/${GROUP_NAME}0"$j"
+                /usr/sbin/mkfile -n 70m $FILE_PATH
+            }
+        done
+    }
+done
+
+for name in ${DISKGROUP_NAMES[@]}; do
+    diskstring=u01/${name}/*
+    diskstrings+=("'$diskstring'")
+done
+
+export ORACLE_BASE=/u01/app/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/11.2.0/dbhome_1
+export ORACLE_SID='+ASM'
+export PATH=$PATH:$ORACLE_HOME/bin
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib
+
+echo "
+INSTANCE_TYPE=ASM
+DB_UNIQUE_NAME=ASM.265063
+ASM_POWER_LIMIT=$ASM_POWER_LIMIT
+ASM_DISKSTRING=$(
+    IFS=,
+    echo "${diskstrings[*]}"
+)
+MEMORY_TARGET=512MB
+remote_login_passwordfile=exclusive
+_ASM_ALLOW_ONLY_RAW_DISKS=FALSE
+" >$ORACLE_HOME/dbs/init+ASM.ora

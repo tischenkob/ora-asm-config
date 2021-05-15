@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+./recreate_diskgroup dangerousdolphin 12 HIGH 4 |
+./recreate_diskgroup dangerouschimpanzee 9 HIGH 3 |
+./drop_disk dangerouschimpanzee 6 |
+./add_disk crazydog |
+./add_disk crazydog |
+./add_disk crazydog > execute.sql

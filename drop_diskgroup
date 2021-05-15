@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+read INPUT
+
+GROUP_NAME=$1
+
+OUTPUT="DROP DISKGROUP $GROUP_NAME INCLUDING CONTENTS;"
+
+echo "$INPUT $OUTPUT"
