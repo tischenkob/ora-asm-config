@@ -19,11 +19,15 @@ for ((i = 0; i < $FAILGROUP_AMOUNT; i++)); do {
     OUTPUT="$OUTPUT
     FAILGROUP fg$i DISK"
     for ((j = 0; j < $DISKS_PER_GROUP; j++)); do {
+        if (((DISK_COUNTER % 3) < 2)); then
+            PREFIX=,
+        else
+            PREFIX=''
+        fi
         FILE_NAME=$GROUP_NAME$DISK_COUNTER
         ((DISK_COUNTER++))
-        OUTPUT="$OUTPUT$PREFIX
-        '/u01/$GROUP_NAME/$FILE_NAME' NAME $FILE_NAME"
-        PREFIX=,
+        OUTPUT="$OUTPUT
+        '/u01/$GROUP_NAME/$FILE_NAME' NAME $FILE_NAME$PREFIX"
     }; done
 }; done
 OUTPUT="$OUTPUT;"

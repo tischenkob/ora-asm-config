@@ -1,6 +1,8 @@
 col path format a32;
 col state format a10;
 col name format a24;
+-- Перебалансировка
+select * from v$asm_operation;
 --Диски
 select path,mount_status from v$asm_disk;
 -- Группы
